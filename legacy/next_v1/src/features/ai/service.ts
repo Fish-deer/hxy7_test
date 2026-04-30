@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { openai } from '@/lib/ai/client';
-import { xfyunClient } from '@/lib/ai/xfyun-client';
+import { XfyunClient, xfyunClient } from '@/lib/ai/xfyun-client';
 import { isAIConfigured, isDemoMode } from '@/lib/demo/mode';
 import { demoCases, demoSites } from '@/lib/demo/store';
 
@@ -120,7 +120,7 @@ export async function askLearningAI(input: AskAIInput) {
     const { act, siteInfo } = await loadContext(input);
     const systemPrompt = buildSystemPrompt(input, act, siteInfo);
 
-    if (process.env.XFYUN_API_KEY || process.env.XFYUN_API_PASSWORD) {
+    if (XfyunClient.isConfigured()) {
       try {
         return await xfyunClient.chat(
           [

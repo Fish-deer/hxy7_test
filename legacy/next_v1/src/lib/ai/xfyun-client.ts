@@ -21,16 +21,24 @@ export class XfyunClient {
   private model: string;
 
   constructor() {
+    this.baseUrl = process.env.XFYUN_BASE_URL || 'https://spark-api-open.xf-yun.com/x2/chat/completions';
+    this.apiPassword = XfyunClient.getApiPassword();
+    this.model = process.env.XFYUN_MODEL || 'spark-x';
+  }
+
+  static getApiPassword() {
     const apiKey = process.env.XFYUN_API_KEY || '';
     const apiSecret = process.env.XFYUN_API_SECRET || '';
 
-    this.baseUrl = process.env.XFYUN_BASE_URL || 'https://spark-api-open.xf-yun.com/x2/chat/completions';
-    this.apiPassword = process.env.XFYUN_API_PASSWORD || (apiKey && apiSecret ? `${apiKey}:${apiSecret}` : apiKey);
-    this.model = process.env.XFYUN_MODEL || 'spark-x';
+    return process.env.XFYUN_API_PASSWORD || (apiKey && apiSecret ? `${apiKey}:${apiSecret}` : '');
+  }
 
-    if (!this.apiPassword) {
-      throw new Error('讯飞星火 API 配置不完整，请配置 XFYUN_API_KEY 和 XFYUN_API_SECRET，或配置 XFYUN_API_PASSWORD');
-    }
+  static isConfigured() {
+    return Boolean(XfyunClient.getApiPassword());
+  }
+
+  isConfigured() {
+    return Boolean(this.apiPassword);
   }
 
   private normalizeMessages(messages: XfyunMessage[]) {
@@ -52,6 +60,10 @@ export class XfyunClient {
   }
 
   async chat(messages: XfyunMessage[], options?: { temperature?: number; maxTokens?: number }): Promise<string> {
+    if (!this.isConfigured()) {
+      throw new Error('Xfyun Spark API is not configured. Set XFYUN_API_KEY and XFYUN_API_SECRET, or set XFYUN_API_PASSWORD.');
+    }
+
     const response = await fetch(this.baseUrl, {
       method: 'POST',
       headers: {
