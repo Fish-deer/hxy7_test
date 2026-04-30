@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply min-h-screen bg-white text-slate-900;
+}
+
+.container-mobile {
+  width: min(96vw, 1440px);
+  margin-inline: auto;
+  padding-inline: clamp(12px, 2vw, 28px);
+}
+
+.app-grid {
+  display: grid;
+  gap: clamp(12px, 1.6vw, 24px);
+}
+
+@media (min-width: 1024px) {
+  .app-grid-3 {
+    grid-template-columns: minmax(220px, 0.8fr) minmax(520px, 1.8fr) minmax(280px, 1fr);
+  }
+}

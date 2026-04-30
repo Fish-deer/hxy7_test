@@ -1,0 +1,12 @@
+{
+  "name": "hxy7-vercel",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix legacy/next_v1 run dev",
+    "build": "npm --prefix legacy/next_v1 run build",
+    "start": "npm --prefix legacy/next_v1 run start",
+    "typecheck": "npm --prefix legacy/next_v1 run typecheck",
+    "lint": "npm --prefix legacy/next_v1 run lint"
+  }
+}
